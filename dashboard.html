@@ -1,106 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TS Creatives CRM</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#050816;
+overflow:hidden;
+color:white;
+}
+
+/* BACKGROUND */
+
+.bg{
+position:fixed;
+width:100%;
+height:100%;
+overflow:hidden;
+z-index:-1;
+}
+
+.blur1{
+position:absolute;
+width:500px;
+height:500px;
+background:#7c3aed;
+filter:blur(180px);
+opacity:.25;
+top:-120px;
+left:-120px;
+animation:float 8s ease-in-out infinite;
+}
+
+.blur2{
+position:absolute;
+width:500px;
+height:500px;
+background:#2563eb;
+filter:blur(180px);
+opacity:.22;
+bottom:-180px;
+right:-100px;
+animation:float2 10s ease-in-out infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0px);}
+50%{transform:translateY(30px);}
+100%{transform:translateY(0px);}
+}
+
+@keyframes float2{
+0%{transform:translateY(0px);}
+50%{transform:translateY(-30px);}
+100%{transform:translateY(0px);}
+}
+
+/* LAYOUT */
+
+.dashboard{
+display:flex;
+height:100vh;
+padding:20px;
+gap:20px;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:290px;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:32px;
+padding:25px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+box-shadow:0 0 50px rgba(0,0,0,.35);
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:15px;
+margin-bottom:50px;
+}
+
+.logo img{
+width:60px;
+height:60px;
+border-radius:20px;
+object-fit:cover;
+box-shadow:0 10px 25px rgba(124,58,237,.4);
+}
+
+.logo-text h1{
+font-size:22px;
+font-weight:800;
+}
+
+.logo-text p{
+font-size:13px;
+color:#94a3b8;
+margin-top:4px;
+}
+
+.nav{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.nav button{
+background:transparent;
+border:none;
+color:#cbd5e1;
+padding:18px;
+border-radius:20px;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+display:flex;
+align-items:center;
+gap:15px;
+transition:.35s;
+position:relative;
+overflow:hidden;
+}
+
+.nav button::before{
+content:'';
+position:absolute;
+left:-100%;
+top:0;
+width:100%;
+height:100%;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+transition:.5s;
+}
+
+.nav button:hover::before{
+left:100%;
+}
+
+.nav button:hover{
+background:linear-gradient(135deg,#7c3aed,#2563eb);
+transform:translateX(6px);
+box-shadow:0 10px 30px rgba(124,58,237,.35);
+}
+
+.active{
+background:linear-gradient(135deg,#7c3aed,#2563eb) !important;
+box-shadow:0 10px 30px rgba(124,58,237,.35);
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+overflow:auto;
+padding-right:8px;
+}
+
+/* TOPBAR */
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:28px;
+}
+
+.search{
+width:420px;
+height:58px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.06);
+border-radius:20px;
+padding:0 20px;
+font-size:15px;
+color:white;
+outline:none;
+backdrop-filter:blur(20px);
+}
+
+.search::placeholder{
+color:#94a3b8;
+}
+
+.right-top{
+display:flex;
+align-items:center;
+gap:18px;
+}
+
+.icon-btn{
+width:56px;
+height:56px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.06);
+border-radius:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+cursor:pointer;
+transition:.3s;
+}
+
+.icon-btn:hover{
+transform:translateY(-3px);
+background:linear-gradient(135deg,#7c3aed,#2563eb);
+}
+
+.profile{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 14px;
+background:rgba(255,255,255,.05);
+border-radius:18px;
+}
+
+.profile img{
+width:48px;
+height:48px;
+border-radius:16px;
+object-fit:cover;
+}
+
+.profile h4{
+font-size:15px;
+}
+
+.profile p{
+font-size:12px;
+color:#94a3b8;
+margin-top:2px;
+}
+
+/* STATS */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:22px;
+margin-bottom:28px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.06);
+backdrop-filter:blur(20px);
+padding:28px;
+border-radius:28px;
+transition:.4s;
+position:relative;
+overflow:hidden;
+}
+
+.card::after{
+content:'';
+position:absolute;
+top:-40px;
+right:-40px;
+width:120px;
+height:120px;
+background:rgba(255,255,255,.04);
+border-radius:50%;
+}
+
+.card:hover{
+transform:translateY(-8px);
+border-color:#7c3aed;
+box-shadow:0 15px 40px rgba(124,58,237,.25);
+}
+
+.card p{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:14px;
+}
+
+.card h1{
+font-size:42px;
+font-weight:800;
+}
+
+.growth{
+margin-top:12px;
+font-size:13px;
+color:#4ade80;
+}
+
+/* GRID */
+
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:22px;
+}
+
+/* PANELS */
+
+.panel{
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.06);
+border-radius:30px;
+padding:28px;
+backdrop-filter:blur(25px);
+margin-bottom:22px;
+animation:fade .5s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.panel-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.panel-head h2{
+font-size:24px;
+font-weight:700;
+}
+
+.tag{
+padding:10px 18px;
+background:rgba(124,58,237,.18);
+border:1px solid rgba(124,58,237,.35);
+border-radius:30px;
+font-size:13px;
+color:#c4b5fd;
+}
+
+/* TEXTAREA */
+
+textarea{
+width:100%;
+height:180px;
+background:#0f172a;
+border:none;
+border-radius:24px;
+padding:22px;
+color:white;
+font-size:15px;
+outline:none;
+resize:none;
+margin-bottom:20px;
+}
+
+textarea:focus{
+border:1px solid #7c3aed;
+}
+
+/* BUTTON */
+
+.send-btn{
+padding:18px 30px;
+border:none;
+border-radius:18px;
+background:linear-gradient(135deg,#7c3aed,#2563eb);
+color:white;
+font-size:15px;
+font-weight:700;
+cursor:pointer;
+transition:.35s;
+position:relative;
+overflow:hidden;
+}
+
+.send-btn::before{
+content:'';
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+transition:.6s;
+}
+
+.send-btn:hover::before{
+left:100%;
+}
+
+.send-btn:hover{
+transform:scale(1.04);
+box-shadow:0 15px 40px rgba(124,58,237,.35);
+}
+
+/* CHAT */
+
+.chat{
+display:flex;
+flex-direction:column;
+gap:16px;
+}
+
+.chat-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px;
+border-radius:22px;
+transition:.35s;
+cursor:pointer;
+}
+
+.chat-box:hover{
+background:rgba(255,255,255,.04);
+transform:translateX(4px);
+}
+
+.chat-user{
+display:flex;
+gap:15px;
+align-items:center;
+}
+
+.chat-user img{
+width:58px;
+height:58px;
+border-radius:18px;
+object-fit:cover;
+}
+
+.chat-user h4{
+font-size:16px;
+margin-bottom:4px;
+}
+
+.chat-user p{
+font-size:13px;
+color:#94a3b8;
+}
+
+.chat-time{
+font-size:12px;
+color:#94a3b8;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+text-align:left;
+padding-bottom:18px;
+font-size:13px;
+font-weight:600;
+color:#94a3b8;
+}
+
+td{
+padding:20px 0;
+border-top:1px solid rgba(255,255,255,.05);
+font-size:15px;
+}
+
+.status{
+padding:10px 18px;
+border-radius:40px;
+font-size:12px;
+font-weight:700;
+display:inline-block;
+}
+
+.hot{
+background:rgba(34,197,94,.15);
+color:#4ade80;
+}
+
+.follow{
+background:rgba(59,130,246,.15);
+color:#60a5fa;
+}
+
+.closed{
+background:rgba(239,68,68,.15);
+color:#f87171;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#7c3aed;
+border-radius:20px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1400px){
+
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:900px){
+
+.dashboard{
+flex-direction:column;
+overflow:auto;
+}
+
+.sidebar{
+width:100%;
+}
+
+.stats{
+grid-template-columns:1fr;
+}
+
+.search{
+width:100%;
+}
+
+.topbar{
+flex-direction:column;
+gap:20px;
+align-items:flex-start;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg">
+<div class="blur1"></div>
+<div class="blur2"></div>
+</div>
+
 <div class="dashboard">
+
+<!-- SIDEBAR -->
 
 <div class="sidebar">
 
 <div>
+
 <div class="logo">
 <img src="logo.png">
-<h2>TS Creatives</h2>
+<div class="logo-text">
+<h1>TS Creatives</h1>
+<p>AI Marketing CRM</p>
+</div>
 </div>
 
-<div class="menu">
-<button class="active">📢 Broadcast</button>
-<button>💬 Chats</button>
-<button>👥 Leads</button>
+<div class="nav">
+<button class="active">📢 Broadcast Campaigns</button>
+<button>💬 Customer Chats</button>
+<button>👥 Lead Management</button>
 <button>📊 Analytics</button>
+<button>🤖 AI Assistant</button>
 <button>⚙ Settings</button>
 </div>
+
+</div>
+
+<div class="panel" style="padding:20px;">
+<h3 style="margin-bottom:10px;">🚀 Pro Tips</h3>
+<p style="font-size:13px;color:#94a3b8;line-height:1.7;">
+Use AI campaigns to increase customer reply rate by 45%.
+</p>
 </div>
 
 </div>
 
-<div class="content">
+<!-- MAIN -->
+
+<div class="main">
+
+<!-- TOPBAR -->
 
 <div class="topbar">
 
-<input class="search-box" placeholder="Search customers...">
+<input class="search" placeholder="Search chats, campaigns, leads...">
 
-<div class="top-actions">
-<div class="notification">🔔</div>
+<div class="right-top">
+
+<div class="icon-btn">🔔</div>
+
+<div class="icon-btn">⚡</div>
 
 <div class="profile">
 <img src="logo.png">
+<div>
+<h4>TS Creatives</h4>
+<p>Administrator</p>
 </div>
 </div>
 
 </div>
+
+</div>
+
+<!-- STATS -->
 
 <div class="stats">
 
-<div class="stat-card">
-<h4>Total Leads</h4>
+<div class="card">
+<p>Total Leads</p>
 <h1>1,245</h1>
+<div class="growth">↑ 18.2% this month</div>
 </div>
 
-<div class="stat-card">
-<h4>Broadcast Sent</h4>
+<div class="card">
+<p>Broadcast Sent</p>
 <h1>876</h1>
+<div class="growth">↑ 12.6% growth</div>
 </div>
 
-<div class="stat-card">
-<h4>Replies</h4>
+<div class="card">
+<p>Replies</p>
 <h1>312</h1>
+<div class="growth">↑ 34% engagement</div>
 </div>
 
-<div class="stat-card">
-<h4>Conversion</h4>
+<div class="card">
+<p>Sales Conversion</p>
 <h1>64%</h1>
+<div class="growth">↑ 8.4% performance</div>
 </div>
 
 </div>
+
+<!-- GRID -->
 
 <div class="grid">
+
+<!-- LEFT -->
 
 <div>
 
 <div class="panel">
 
-<div class="panel-header">
+<div class="panel-head">
 <h2>Broadcast Campaign</h2>
+<div class="tag">AI Optimized</div>
 </div>
 
-<textarea placeholder="Write your campaign message..."></textarea>
+<textarea placeholder="Write your WhatsApp marketing campaign..."></textarea>
 
 <button class="send-btn">
-🚀 Send Campaign
+🚀 Launch Campaign
 </button>
 
 </div>
 
 <div class="panel">
 
-<div class="panel-header">
+<div class="panel-head">
 <h2>Lead Management</h2>
+<div class="tag">Live CRM</div>
 </div>
 
-<table class="lead-table">
+<table>
 
 <tr>
 <th>Name</th>
-<th>Number</th>
+<th>Phone</th>
 <th>Status</th>
 </tr>
 
 <tr>
-<td>Ahmed</td>
+<td>Mohammed Ali</td>
 <td>+966500000000</td>
 <td><span class="status hot">Interested</span></td>
 </tr>
 
 <tr>
-<td>Rahul</td>
+<td>Rahul Sharma</td>
 <td>+919999999999</td>
 <td><span class="status follow">Follow Up</span></td>
+</tr>
+
+<tr>
+<td>Ahmed Khan</td>
+<td>+971500000000</td>
+<td><span class="status closed">Closed</span></td>
 </tr>
 
 </table>
@@ -109,46 +728,83 @@
 
 </div>
 
+<!-- RIGHT -->
+
 <div>
 
 <div class="panel">
 
-<div class="panel-header">
+<div class="panel-head">
 <h2>Recent Chats</h2>
+<div class="tag">Realtime</div>
 </div>
 
-<div class="chat-list">
+<div class="chat">
 
-<div class="chat-item">
+<div class="chat-box">
 
 <div class="chat-user">
 <img src="logo.png">
 
-<div class="chat-info">
-<h4>Mohammed</h4>
-<p>I need social media marketing</p>
+<div>
+<h4>Ali Hassan</h4>
+<p>I need a branding package</p>
 </div>
 </div>
 
 <div class="chat-time">
-2m
+2m ago
 </div>
 
 </div>
 
-<div class="chat-item">
+<div class="chat-box">
 
 <div class="chat-user">
 <img src="logo.png">
 
-<div class="chat-info">
-<h4>Ali</h4>
-<p>Need logo design</p>
+<div>
+<h4>Sarah</h4>
+<p>Can you run ads for my business?</p>
 </div>
 </div>
 
 <div class="chat-time">
-10m
+8m ago
+</div>
+
+</div>
+
+<div class="chat-box">
+
+<div class="chat-user">
+<img src="logo.png">
+
+<div>
+<h4>Khobar Restaurant</h4>
+<p>Need Instagram creatives</p>
+</div>
+</div>
+
+<div class="chat-time">
+20m ago
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>Campaign Performance</h2>
+<div class="tag">Today</div>
+</div>
+
+<div style="height:220px;background:#0f172a;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#64748b;">
+📈 Analytics Graph Area
 </div>
 
 </div>
@@ -161,6 +817,5 @@
 
 </div>
 
-</div>
-
-</div>
+</body>
+</html>
