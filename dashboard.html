@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TS Creatives CRM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <div class="sidebar">
+    <h2>TS Creatives</h2>
+
+    <button onclick="showSection('broadcast')">
+      📢 Broadcast
+    </button>
+
+    <button onclick="showSection('chats')">
+      💬 Chats
+    </button>
+
+    <button onclick="showSection('leads')">
+      👥 Leads
+    </button>
+  </div>
+
+  <div class="content">
+
+    <div id="broadcast" class="section">
+      <h1>Broadcast Campaign</h1>
+
+      <textarea id="message"
+      placeholder="Enter marketing message"></textarea>
+
+      <button onclick="sendBulk()">
+        Send Campaign
+      </button>
+
+      <p id="status"></p>
+    </div>
+
+    <div id="chats" class="section hidden">
+      <h1>Customer Chats</h1>
+
+      <div id="chatBox">
+        No chats yet
+      </div>
+    </div>
+
+    <div id="leads" class="section hidden">
+      <h1>Lead Management</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Number</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody id="leadTable">
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
