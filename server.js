@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const OpenAI = require("openai");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
 
@@ -16,7 +17,7 @@ STATIC FRONTEND
 app.use(express.static(path.join(__dirname, "dist")));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "dist/index.html"));
 });
 
 /*
@@ -52,7 +53,6 @@ app.get("/webhook", (req, res) => {
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("Webhook verified");
     return res.status(200).send(challenge);
   }
 
@@ -61,7 +61,7 @@ app.get("/webhook", (req, res) => {
 
 /*
 ========================================
-INCOMING WHATSAPP MESSAGES
+WHATSAPP WEBHOOK
 ========================================
 */
 
@@ -77,24 +77,16 @@ app.post("/webhook", async (req, res) => {
     const from = message.from;
     const text = message.text?.body || "";
 
-    console.log("Incoming message:", text);
+    console.log("Incoming:", text);
 
-    /*
-    ========================================
-    GPT RESPONSE
-    ========================================
-    */
-
-    const aiResponse = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: [
-        {
-          role: "system",
-          content: `
+    const aiResponse =
+      await openai.chat.completions.create({
+        model: "gpt-4.1-mini",
+        messages: [
+          {
+            role: "system",
+            content: `
 You are TS Creatives AI Assistant.
-
-Business:
-TS Creatives & Digital Marketing Hyderabad
 
 Services:
 - Logo Design
@@ -105,38 +97,28 @@ Services:
 - Website Development
 - Video Editing
 - School Campaigns
-- Google Business Optimization
 
 Pricing:
-- Logo Design ₹999+
-- Social Media ₹4999/month
+- Logo ₹999+
 - Website ₹9999+
-- WhatsApp Automation ₹14999+
+- Marketing ₹4999/month
 
 Rules:
-- Reply professionally
-- Keep replies short
+- Be professional
 - Use emojis smartly
-- Convert leads into customers
-- Encourage users to contact TS Creatives
+- Convert leads
+- Keep replies concise
 `,
-        },
-        {
-          role: "user",
-          content: text,
-        },
-      ],
-    });
+          },
+          {
+            role: "user",
+            content: text,
+          },
+        ],
+      });
 
     const reply =
-      aiResponse.choices[0].message.content ||
-      "Thank you for contacting TS Creatives.";
-
-    /*
-    ========================================
-    SEND WHATSAPP MESSAGE
-    ========================================
-    */
+      aiResponse.choices[0].message.content;
 
     await axios.post(
       `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`,
@@ -157,11 +139,9 @@ Rules:
     );
 
     console.log("Reply sent");
-
     return res.sendStatus(200);
   } catch (error) {
     console.log(
-      "Webhook Error:",
       error.response?.data || error.message
     );
 
@@ -181,20 +161,16 @@ app.post("/api/send-campaign", async (req, res) => {
 
     if (!campaign || !customers?.length) {
       return res.status(400).json({
-        error: "Campaign or customers missing",
+        error: "Campaign missing",
       });
     }
 
     for (const customer of customers) {
-      const number = customer.phone
-        .replace(/\+/g, "")
-        .replace(/\s/g, "");
-
       await axios.post(
         `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`,
         {
           messaging_product: "whatsapp",
-          to: number,
+          to: customer.phone,
           type: "text",
           text: {
             body: campaign,
@@ -211,16 +187,12 @@ app.post("/api/send-campaign", async (req, res) => {
 
     return res.json({
       success: true,
-      message: "Campaign sent successfully",
     });
   } catch (error) {
-    console.log(
-      "Campaign Error:",
-      error.response?.data || error.message
-    );
+    console.log(error.response?.data);
 
     return res.status(500).json({
-      error: "Failed to send campaign",
+      error: "Campaign failed",
     });
   }
 });
@@ -232,7 +204,9 @@ REACT ROUTING FIX
 */
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+  res.sendFile(
+    path.join(__dirname, "dist/index.html")
+  );
 });
 
 /*
@@ -244,5 +218,5 @@ START SERVER
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
