@@ -139,6 +139,129 @@ search.style.boxShadow = "none";
 
 });
 
+<script>
+
+// MENU ACTIVE BUTTON
+
+const menuButtons = document.querySelectorAll(".nav button");
+
+menuButtons.forEach(button => {
+
+button.addEventListener("click", () => {
+
+menuButtons.forEach(btn => btn.classList.remove("active"));
+
+button.classList.add("active");
+
+});
+
+});
+
+
+// SEND CAMPAIGN BUTTON
+
+const sendBtn = document.querySelector(".send-btn");
+const textarea = document.querySelector("textarea");
+
+sendBtn.addEventListener("click", () => {
+
+const message = textarea.value;
+
+if(message.trim() === ""){
+
+alert("Please enter a campaign message");
+return;
+
+}
+
+sendBtn.innerHTML = "⏳ Sending...";
+
+setTimeout(() => {
+
+sendBtn.innerHTML = "✅ Campaign Sent";
+
+textarea.value = "";
+
+setTimeout(() => {
+
+sendBtn.innerHTML = "🚀 Launch Campaign";
+
+},2000);
+
+},2000);
+
+});
+
+
+// CHAT CLICK EFFECT
+
+const chats = document.querySelectorAll(".chat-box");
+
+chats.forEach(chat => {
+
+chat.addEventListener("click", () => {
+
+chat.style.background = "linear-gradient(135deg,#7c3aed,#2563eb)";
+
+setTimeout(() => {
+
+chat.style.background = "rgba(255,255,255,.04)";
+
+},1000);
+
+});
+
+});
+
+
+// CARD HOVER ANIMATION
+
+const cards = document.querySelectorAll(".card");
+
+cards.forEach(card => {
+
+card.addEventListener("mousemove", (e) => {
+
+const rect = card.getBoundingClientRect();
+
+const x = e.clientX - rect.left;
+const y = e.clientY - rect.top;
+
+card.style.background = `
+radial-gradient(circle at ${x}px ${y}px,
+rgba(124,58,237,.25),
+rgba(255,255,255,.04))
+`;
+
+});
+
+card.addEventListener("mouseleave", () => {
+
+card.style.background = "rgba(255,255,255,.05)";
+
+});
+
+});
+
+
+// SEARCH ANIMATION
+
+const search = document.querySelector(".search");
+
+search.addEventListener("focus", () => {
+
+search.style.border = "1px solid #7c3aed";
+search.style.boxShadow = "0 0 25px rgba(124,58,237,.4)";
+
+});
+
+search.addEventListener("blur", () => {
+
+search.style.border = "1px solid rgba(255,255,255,.06)";
+search.style.boxShadow = "none";
+
+});
+
 </script>
 body{
 background:#050816;
