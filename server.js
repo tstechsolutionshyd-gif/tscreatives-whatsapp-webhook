@@ -1,81 +1,123 @@
 const express = require("express");
 const axios = require("axios");
 const OpenAI = require("openai");
+const path = require("path");
 
 const app = express();
-app.use(express.static(__dirname));
+
 app.use(express.json());
+
+/* =========================
+   FRONTEND BUILD SERVE
+========================= */
+
+app.use(express.static(path.join(__dirname, "dist")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
+/* =========================
+   OPENAI
+========================= */
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+/* =========================
+   ENV VARIABLES
+========================= */
+
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
+
+/* =========================
+   WEBHOOK VERIFY
+========================= */
 
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
-  if (mode && token === VERIFY_TOKEN) {
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("✅ WEBHOOK VERIFIED");
     return res.status(200).send(challenge);
   }
 
   return res.sendStatus(403);
 });
 
+/* =========================
+   WEBHOOK RECEIVE MESSAGE
+========================= */
+
 app.post("/webhook", async (req, res) => {
   try {
+    console.log(
+      "📩 Incoming Webhook:",
+      JSON.stringify(req.body, null, 2)
+    );
+
     const message =
       req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-    if (message) {
-      const from = message.from;
-      const text = message.text?.body;
+    if (!message) {
+      return res.sendStatus(200);
+    }
 
-      console.log("Incoming:", text);
+    const from = message.from;
+    const text = message.text?.body || "";
 
-      const aiResponse = await openai.chat.completions.create({
+    console.log("📨 Message:", text);
+
+    /* =========================
+       OPENAI RESPONSE
+    ========================= */
+
+    const aiResponse =
+      await openai.chat.completions.create({
         model: "gpt-4.1-mini",
         messages: [
           {
             role: "system",
             content: `
-You are the AI sales assistant for TS Creatives & Digital Solutions.
+You are the official AI sales assistant for TS Creatives & Digital Solutions Hyderabad.
 
-Your job is to:
-- Reply professionally on WhatsApp
-- Help customers choose services
-- Convert leads into clients
-- Speak friendly and confidently
-- Keep replies short and attractive
+Your goals:
+- Convert leads into customers
+- Reply professionally
+- Sound premium and modern
+- Keep replies short for WhatsApp
+- Use emojis professionally
+- Promote services naturally
 
 Services:
-1. Logo Design
-2. Branding
-3. Social Media Marketing
-4. Meta Ads
-5. WhatsApp Automation
-6. Website Development
-7. School Admission Campaigns
-8. Video Editing
-9. Google My Business Optimization
+• Logo Design
+• Branding
+• Social Media Marketing
+• Meta Ads
+• WhatsApp Automation
+• Website Development
+• Video Editing
+• School Marketing
+• Google Business Optimization
 
 Pricing:
-- Logo Design starts at ₹999
-- Social Media Management starts at ₹4999/month
-- Website Development starts at ₹9999
-- WhatsApp Automation starts at ₹14999
+• Logo Design ₹999+
+• Social Media ₹4999/month
+• Website ₹9999+
+• WhatsApp Automation ₹14999+
 
 Rules:
-- Always greet warmly
-- Use emojis professionally
-- Encourage users to contact for details
-- Try to convert the conversation into a lead
-- Keep messages concise for WhatsApp
-`
+- Be friendly
+- Keep replies concise
+- Ask qualifying questions
+- Push user toward booking service
+- Mention TS Creatives branding naturally
+`,
           },
           {
             role: "user",
@@ -84,32 +126,39 @@ Rules:
         ],
       });
 
-      const reply =
-        aiResponse.choices[0].message.content;
+    const reply =
+      aiResponse.choices?.[0]?.message?.content ||
+      "Thank you for contacting TS Creatives 🚀";
 
-      await axios.post(
-        `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`,
-        {
-          messaging_product: "whatsapp",
-          to: from,
-          text: {
-            body: reply,
-          },
+    console.log("🤖 AI Reply:", reply);
+
+    /* =========================
+       SEND WHATSAPP MESSAGE
+    ========================= */
+
+    await axios.post(
+      `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to: from,
+        type: "text",
+        text: {
+          body: reply,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${WHATSAPP_TOKEN}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-      console.log("Reply sent:", reply);
-    }
-
+    console.log("✅ WhatsApp Reply Sent");
     res.sendStatus(200);
   } catch (error) {
-    console.log(
+    console.error(
+      "❌ ERROR:",
       error.response?.data || error.message
     );
 
@@ -117,6 +166,20 @@ Rules:
   }
 });
 
-app.listen(process.env.PORT || 10000, () => {
-  console.log("Server running on port 10000");
+/* =========================
+   FALLBACK ROUTE
+========================= */
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
+/* =========================
+   START SERVER
+========================= */
+
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
