@@ -3,7 +3,7 @@ const axios = require("axios");
 const OpenAI = require("openai");
 
 const app = express();
-pp.use(express.static(__dirname));
+app.use(express.static(__dirname));
 app.use(express.json());
 
 const openai = new OpenAI({
