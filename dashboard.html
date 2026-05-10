@@ -1,74 +1,166 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>TS Creatives CRM</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<div class="dashboard">
 
-<div class="container">
+<div class="sidebar">
 
-  <div class="sidebar">
-    <h2>TS Creatives</h2>
+<div>
+<div class="logo">
+<img src="logo.png">
+<h2>TS Creatives</h2>
+</div>
 
-    <button onclick="showSection('broadcast')">
-      📢 Broadcast
-    </button>
-
-    <button onclick="showSection('chats')">
-      💬 Chats
-    </button>
-
-    <button onclick="showSection('leads')">
-      👥 Leads
-    </button>
-  </div>
-
-  <div class="content">
-
-    <div id="broadcast" class="section">
-      <h1>Broadcast Campaign</h1>
-
-      <textarea id="message"
-      placeholder="Enter marketing message"></textarea>
-
-      <button onclick="sendBulk()">
-        Send Campaign
-      </button>
-
-      <p id="status"></p>
-    </div>
-
-    <div id="chats" class="section hidden">
-      <h1>Customer Chats</h1>
-
-      <div id="chatBox">
-        No chats yet
-      </div>
-    </div>
-
-    <div id="leads" class="section hidden">
-      <h1>Lead Management</h1>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Number</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody id="leadTable">
-        </tbody>
-      </table>
-    </div>
-
-  </div>
+<div class="menu">
+<button class="active">📢 Broadcast</button>
+<button>💬 Chats</button>
+<button>👥 Leads</button>
+<button>📊 Analytics</button>
+<button>⚙ Settings</button>
+</div>
+</div>
 
 </div>
 
-<script src="dashboard.js"></script>
+<div class="content">
 
-</body>
-</html>
+<div class="topbar">
+
+<input class="search-box" placeholder="Search customers...">
+
+<div class="top-actions">
+<div class="notification">🔔</div>
+
+<div class="profile">
+<img src="logo.png">
+</div>
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+<h4>Total Leads</h4>
+<h1>1,245</h1>
+</div>
+
+<div class="stat-card">
+<h4>Broadcast Sent</h4>
+<h1>876</h1>
+</div>
+
+<div class="stat-card">
+<h4>Replies</h4>
+<h1>312</h1>
+</div>
+
+<div class="stat-card">
+<h4>Conversion</h4>
+<h1>64%</h1>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div>
+
+<div class="panel">
+
+<div class="panel-header">
+<h2>Broadcast Campaign</h2>
+</div>
+
+<textarea placeholder="Write your campaign message..."></textarea>
+
+<button class="send-btn">
+🚀 Send Campaign
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-header">
+<h2>Lead Management</h2>
+</div>
+
+<table class="lead-table">
+
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>Ahmed</td>
+<td>+966500000000</td>
+<td><span class="status hot">Interested</span></td>
+</tr>
+
+<tr>
+<td>Rahul</td>
+<td>+919999999999</td>
+<td><span class="status follow">Follow Up</span></td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<div>
+
+<div class="panel">
+
+<div class="panel-header">
+<h2>Recent Chats</h2>
+</div>
+
+<div class="chat-list">
+
+<div class="chat-item">
+
+<div class="chat-user">
+<img src="logo.png">
+
+<div class="chat-info">
+<h4>Mohammed</h4>
+<p>I need social media marketing</p>
+</div>
+</div>
+
+<div class="chat-time">
+2m
+</div>
+
+</div>
+
+<div class="chat-item">
+
+<div class="chat-user">
+<img src="logo.png">
+
+<div class="chat-info">
+<h4>Ali</h4>
+<p>Need logo design</p>
+</div>
+</div>
+
+<div class="chat-time">
+10m
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
